@@ -17,7 +17,6 @@ class BATTLETANK_API ATankPlayerController : public APlayerController
 
 protected:
     virtual void BeginPlay() override;
-    virtual void Tick(float DeltaSeconds) override;
 
 private:
     UPROPERTY(EditAnywhere)
@@ -28,6 +27,8 @@ private:
 
     UPROPERTY(EditAnywhere)
     float LineTraceRange = 1000000; // 10km
+
+    virtual void Tick(float DeltaSeconds) override;
 
     ATank* GetControlledTank() const;
 
