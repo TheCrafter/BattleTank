@@ -2,6 +2,7 @@
 
 #include "TankPlayerController.h"
 #include "Engine/World.h"
+#include "Tank.h"
 
 void ATankPlayerController::BeginPlay()
 {
@@ -39,14 +40,12 @@ void ATankPlayerController::AimTowardsCrosshair()
 // Get world location if linetrace through corsshair, true if hits landscape
 bool ATankPlayerController::GetSightRayHitLocation(FVector& OutHitLocation) const
 {
-    bool Result = false;
-
     /// Get LookDirection
     FVector LookDirection;
     if (GetLookDirection(LookDirection))
-        Result = GetLookVectorHitLocation(LookDirection, OutHitLocation);
+        GetLookVectorHitLocation(LookDirection, OutHitLocation);
 
-    return Result;
+    return true;
 }
 
 bool ATankPlayerController::GetLookDirection(FVector& LookDirection) const
@@ -75,6 +74,6 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVec
         HitLocation = HitResult.Location;
         return true;
     }
-
+    HitLocation = FVector(0);
     return false;
 }
