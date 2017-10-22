@@ -7,6 +7,7 @@
 #include "Tank.generated.h"
 
 class UTankAimingComponent;
+class UTankMovementComponent;
 class UTankBarrel;
 class UTankTurret;
 class AProjectile;
@@ -32,6 +33,9 @@ public:
     void AimAt(FVector HitLocation);
 
 protected:
+    UPROPERTY(BlueprintReadOnly)
+    UTankMovementComponent* TankMovementComponent = nullptr;
+
     UTankAimingComponent* TankAimingComponent = nullptr;
 
 	// Called when the game starts or when spawned
