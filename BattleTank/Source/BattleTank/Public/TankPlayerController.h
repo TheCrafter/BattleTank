@@ -6,7 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h"
 
-class ATank;
+class UTankAimingComponent;
 
 /**
  * 
@@ -19,7 +19,12 @@ class BATTLETANK_API ATankPlayerController : public APlayerController
 protected:
     virtual void BeginPlay() override;
 
+    UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
+    void FoundAimingComponent(UTankAimingComponent* AimCompRef);
+
 private:
+    UTankAimingComponent* AimingComponent;
+
     UPROPERTY(EditDefaultsOnly)
     float CrossHairXLocation = 0.5f;
 
@@ -30,8 +35,6 @@ private:
     float LineTraceRange = 1000000; // 10km
 
     virtual void Tick(float DeltaSeconds) override;
-
-    ATank* GetControlledTank() const;
 
     // Start the tank moving the barrel so that a shot would hit where
     // the corsshair intersects the world
