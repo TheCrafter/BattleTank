@@ -16,6 +16,31 @@ UTankAimingComponent::UTankAimingComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
+void UTankAimingComponent::BeginPlay()
+{
+    // So that first fire is after initial reload
+    LastFireTime = FPlatformTime::Seconds();
+}
+
+void UTankAimingComponent::TickComponent(
+    float DeltaTime,
+    enum ELevelTick TickType,
+    FActorComponentTickFunction *ThisTickFunction)
+{
+    if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds)
+    {
+        FiringState = EFiringState::Reloading;
+    }
+    else if (IsBarrelMoving())
+    {
+        FiringState = EFiringState::Aiming;
+    }
+    else
+    {
+        FiringState = EFiringState::Locked;
+    }
+}
+
 void UTankAimingComponent::Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
 {
     Barrel = BarrelToSet;
@@ -24,10 +49,7 @@ void UTankAimingComponent::Initialize(UTankBarrel* BarrelToSet, UTankTurret* Tur
 
 void UTankAimingComponent::Fire()
 {
-    bool IsReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds;
-    if (!ensure(Barrel)) { return; }
-
-    if (IsReloaded)
+    if (FiringState != EFiringState::Reloading && ensure(Barrel) && ensure(ProjectileBlueprint))
     {
         // Spawn projectile at the socket location of the barrel
         AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(
@@ -61,7 +83,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
     if (bHaveAimSolution)
     {
         // Turn OutLaunchVelocity to unit vector
-        FVector AimDirection = OutLaunchVelocity.GetSafeNormal();
+        AimDirection = OutLaunchVelocity.GetSafeNormal();
         MoveBarrelTowards(AimDirection);
     }
 }
@@ -76,4 +98,9 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
     FRotator DeltaRotator = AimAsRotator - BarrelRotator;
     Barrel->Elevate(DeltaRotator.Pitch);
     Turret->Rotate(DeltaRotator.Yaw);
+}
+
+bool UTankAimingComponent::IsBarrelMoving() const
+{
+    return ensure(Barrel) ? !Barrel->GetForwardVector().Equals(AimDirection, 0.1f) : false;
 }
