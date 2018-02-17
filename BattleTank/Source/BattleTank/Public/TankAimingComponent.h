@@ -33,6 +33,9 @@ public:
     UFUNCTION(BlueprintCallable)
     void Fire();
 
+    UFUNCTION(BlueprintCallable)
+    float GetRemainingReloadTime() const;
+
     void AimAt(FVector HitLocation);
 
 protected:
@@ -45,8 +48,8 @@ private:
     
     UTankBarrel* Barrel = nullptr;
     UTankTurret* Turret = nullptr;
-    double LastFireTime = 0;
     FVector AimDirection;
+    double LastFireTime = 0;
 
     UPROPERTY(EditDefaultsOnly, Category = "Firing")
     float LaunchSpeed = 10000; // TODO find sensible default

@@ -62,6 +62,11 @@ void UTankAimingComponent::Fire()
     }
 }
 
+float UTankAimingComponent::GetRemainingReloadTime() const
+{
+    return ReloadTimeInSeconds - (FPlatformTime::Seconds() - LastFireTime);
+}
+
 void UTankAimingComponent::AimAt(FVector HitLocation)
 {
     if (!ensure(Barrel && Turret)) { return; }
