@@ -27,7 +27,11 @@ void UTankAimingComponent::TickComponent(
     enum ELevelTick TickType,
     FActorComponentTickFunction *ThisTickFunction)
 {
-    if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds)
+    if (RoundsLeft <= 0)
+    {
+        FiringState = EFiringState::OutOfAmmo;
+    }
+    else if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds)
     {
         FiringState = EFiringState::Reloading;
     }
@@ -49,7 +53,8 @@ void UTankAimingComponent::Initialize(UTankBarrel* BarrelToSet, UTankTurret* Tur
 
 void UTankAimingComponent::Fire()
 {
-    if (FiringState != EFiringState::Reloading && ensure(Barrel) && ensure(ProjectileBlueprint))
+    if (ensure(Barrel) && ensure(ProjectileBlueprint) &&
+        (FiringState == EFiringState::Locked || FiringState == EFiringState::Aiming))
     {
         // Spawn projectile at the socket location of the barrel
         AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(
@@ -59,6 +64,7 @@ void UTankAimingComponent::Fire()
         );
         Projectile->LaunchProjectile(LaunchSpeed);
         LastFireTime = FPlatformTime::Seconds();
+        RoundsLeft--;
     }
 }
 
@@ -96,6 +102,11 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 EFiringState UTankAimingComponent::GetFiringState() const
 {
     return FiringState;
+}
+
+int UTankAimingComponent::GetRoundsLeft() const
+{
+    return RoundsLeft;
 }
 
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
