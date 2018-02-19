@@ -38,7 +38,7 @@ public:
     float GetRemainingReloadTime() const;
 
     UFUNCTION(BlueprintCallable, Category = "Firing")
-    int GetRoundsLeft() const;
+    int32 GetRoundsLeft() const;
 
     void AimAt(FVector HitLocation);
 
@@ -57,18 +57,19 @@ private:
     FVector AimDirection;
     double LastFireTime = 0;
 
-    UPROPERTY(EditDefaultsOnly, Category = "Firing")
-    float LaunchSpeed = 10000; // TODO find sensible default
-
     UPROPERTY(EditDefaultsOnly, Category = "Setup")
     TSubclassOf<AProjectile> ProjectileBlueprint;
 
     UPROPERTY(EditDefaultsOnly, Category = "Firing")
+    float LaunchSpeed = 10000; // TODO find sensible default
+
+    UPROPERTY(EditDefaultsOnly, Category = "Firing")
     float ReloadTimeInSeconds = 3;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Firing")
+    int32 RoundsLeft = 3;
 
     void MoveBarrelTowards(FVector AimDirection);
 
     bool IsBarrelMoving() const;
-
-    int RoundsLeft = 3;
 };
