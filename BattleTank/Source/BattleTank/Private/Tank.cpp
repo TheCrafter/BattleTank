@@ -10,6 +10,11 @@ ATank::ATank()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
+float ATank::GetHealthPercent() const
+{
+    return (float)CurrentHealth / (float)StartingHealth;
+}
+
 float ATank::TakeDamage(
     float DamageAmount,
     struct FDamageEvent const& DamageEvent,
