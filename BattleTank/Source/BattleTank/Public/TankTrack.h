@@ -27,7 +27,6 @@ public:
 private:
     float CurrentThrottle = 0;
 
-
     UTankTrack();
     virtual void BeginPlay() override;
 
