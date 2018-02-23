@@ -26,6 +26,9 @@ protected:
     virtual void BeginPlay() override;
 
 private:
+    UPROPERTY(EditDefaultsOnly, Category = "Setup")
+    float DestroyDelay = 10.f;
+
     UPROPERTY(VisibleAnywhere, Category = "Components")
         UStaticMeshComponent* CollisionMesh = nullptr;
 
@@ -41,5 +44,7 @@ private:
     UProjectileMovementComponent* ProjectileMovementComponent = nullptr;
 
     UFUNCTION()
-        void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+    void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+
+    void OnTimerExpire();
 };
