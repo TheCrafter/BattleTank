@@ -34,7 +34,12 @@ private:
     UPROPERTY(EditDefaultsOnly)
     float LineTraceRange = 1000000; // 10km
 
+    UFUNCTION()
+    void OnPossessedTankDeath();
+
     virtual void Tick(float DeltaSeconds) override;
+
+    virtual void SetPawn(APawn* InPawn) override;
 
     // Start the tank moving the barrel so that a shot would hit where
     // the corsshair intersects the world
